@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/movies")
@@ -13,67 +14,64 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
 
-    // Add a movie
     @PostMapping("/add-movie")
     public ResponseEntity<String> addMovie(@RequestBody Movie movie) {
         movieService.addMovie(movie);
-        return ResponseEntity.ok("Movie added successfully!");
+        return ResponseEntity.ok("Movie added successfully.");
     }
 
-    // Add a director
     @PostMapping("/add-director")
     public ResponseEntity<String> addDirector(@RequestBody Director director) {
         movieService.addDirector(director);
-        return ResponseEntity.ok("Director added successfully!");
+        return ResponseEntity.ok("Director added successfully.");
     }
 
-    // Pair an existing movie and director
     @PutMapping("/add-movie-director-pair")
-    public ResponseEntity<String> addMovieDirectorPair(@RequestParam("movie") String movieName,
-                                                       @RequestParam("director") String directorName) {
+    public ResponseEntity<String> addMovieDirectorPair(@RequestParam("movieName") String movieName,
+                                                       @RequestParam("directorName") String directorName) {
         movieService.addMovieDirectorPair(movieName, directorName);
-        return ResponseEntity.ok("Movie-Director pair added successfully!");
+        return ResponseEntity.ok("Movie-Director pair added successfully.");
     }
 
-    // Get Movie by movie name
     @GetMapping("/get-movie-by-name/{name}")
-    public ResponseEntity<Movie> getMovieByName(@PathVariable("name") String movieName) {
-        Movie movie = movieService.getMovieByName(movieName);
+    public ResponseEntity<Movie> getMovieByName(@PathVariable("name") String name) {
+        Movie movie = movieService.getMovieByName(name);
         return ResponseEntity.ok(movie);
     }
 
-    // Get Director by director name
     @GetMapping("/get-director-by-name/{name}")
-    public ResponseEntity<Director> getDirectorByName(@PathVariable("name") String directorName) {
-        Director director = movieService.getDirectorByName(directorName);
+    public ResponseEntity<Director> getDirectorByName(@PathVariable("name") String name) {
+        Director director = movieService.getDirectorByName(name);
         return ResponseEntity.ok(director);
     }
 
-    // Get List of movies name for a given director name
     @GetMapping("/get-movies-by-director-name/{director}")
-    public ResponseEntity<List<String>> getMoviesByDirectorName(@PathVariable("director") String directorName) {
-        List<String> movies = movieService.getMoviesByDirectorName(directorName);
+    public ResponseEntity<List<String>> getMoviesByDirectorName(@PathVariable("director") String director) {
+        List<String> movies = movieService.getMoviesByDirectorName(director);
         return ResponseEntity.ok(movies);
     }
 
-    // Get List of all movies added
+
+
     @GetMapping("/get-all-movies")
-    public ResponseEntity<List<Movie>> findAllMovies() {
-        List<Movie> movies = movieService.findAllMovies();
+    public ResponseEntity<List<String>> findAllMovies() {
+        List<String> movies = movieService.findAllMovies()
+                .stream()
+                .map(Movie::getName)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(movies);
     }
 
-    // Delete a director and its movies from the records
     @DeleteMapping("/delete-director-by-name")
-    public ResponseEntity<String> deleteDirectorByName(@RequestParam("name") String directorName) {
-        movieService.deleteDirectorByName(directorName);
-        return ResponseEntity.ok("Director and its movies deleted successfully!");
+    public ResponseEntity<String> deleteDirectorByName(@RequestParam("name") String name) {
+        movieService.deleteDirectorByName(name);
+        return ResponseEntity.ok("Director and their movies deleted successfully.");
     }
 
-    // Delete all directors and all movies by them from the records
     @DeleteMapping("/delete-all-directors")
     public ResponseEntity<String> deleteAllDirectors() {
         movieService.deleteAllDirectors();
-        return ResponseEntity.ok("All directors and their movies deleted successfully!");
+        return ResponseEntity.ok("All directors and their movies deleted successfully.");
     }
+
 }

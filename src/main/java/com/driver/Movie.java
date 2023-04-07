@@ -4,13 +4,23 @@ public class Movie {
     private String name;
     private int durationInMinutes;
     private double imdbRating;
+    private String DirectorName;
+
+    public String getDirectorName() {
+        return DirectorName;
+    }
+
+    public void setDirectorName(String directorName) {
+        DirectorName = directorName;
+    }
 
     public Movie() {}
 
-    public Movie(String name, int durationInMinutes, double imdbRating) {
+    public Movie(String name, int durationInMinutes, double imdbRating, String DirectorName) {
         this.name = name;
         this.durationInMinutes = durationInMinutes;
         this.imdbRating = imdbRating;
+        this.DirectorName = DirectorName;
     }
 
     // getters and setters

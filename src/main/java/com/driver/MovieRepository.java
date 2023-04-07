@@ -51,8 +51,15 @@ public class MovieRepository {
     }
 
     public List<String> getMoviesByDirectorName(String directorName) {
-        return directorToMovieMap.getOrDefault(directorName, new ArrayList<>());
+        List<String> movieNames = new ArrayList<>();
+        for (Movie movie : movies.values()) {
+            if (movie.getDirectorName().equalsIgnoreCase(directorName)) {
+                movieNames.add(movie.getName());
+            }
+        }
+        return movieNames;
     }
+
 
     public List<Movie> findAllMovies() {
         return new ArrayList<>(movies.values());
